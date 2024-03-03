@@ -41,9 +41,28 @@ iface wlan0 inet static
     netmask 255.255.255.0
 EOF
 
-# Wechselskript in den Autostart einbinden
-skript_pfad="$(dirname "$(readlink -f "$0")")/wechsler.sh"
-sed -i "/^exit 0/i $skript_pfad &" /etc/rc.local
+# Wechselskript kopieren
+cp wechsler.sh /usr/local/bin/wechsler.sh
+chmod +x /usr/local/bin/wechsler.sh
+
+# Systemd Service Unit erstellen
+cat > /etc/systemd/system/wechsler.service <<EOF
+[Unit]
+Description=Wechsler Skript
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/wechsler.sh
+Type=simple
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Systemd konfiguration neu laden und Service aktivieren
+systemctl daemon-reload
+systemctl enable wechsler.service
 
 # Hostapd und Dnsmasq starten
 systemctl unmask hostapd
