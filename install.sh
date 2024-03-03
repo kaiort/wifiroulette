@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Pfad zur aktuellen Verzeichnis
+verzeichnis="$(dirname "$(readlink -f "$0")")"
+
 # Prüfen, ob das Skript mit Root-Rechten ausgeführt wird
 if [ "$(id -u)" -ne 0 ]; then
     echo "Dieses Skript muss mit Root-Rechten ausgeführt werden. Bitte fügen Sie sudo hinzu."
@@ -41,28 +44,8 @@ iface wlan0 inet static
     netmask 255.255.255.0
 EOF
 
-# Wechselskript kopieren
-cp wechsler.sh /usr/local/bin/wechsler.sh
-chmod +x /usr/local/bin/wechsler.sh
-
-# Systemd Service Unit erstellen
-cat > /etc/systemd/system/wechsler.service <<EOF
-[Unit]
-Description=Wechsler Skript
-After=network.target
-
-[Service]
-ExecStart=/usr/local/bin/wechsler.sh
-Type=simple
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# Systemd konfiguration neu laden und Service aktivieren
-systemctl daemon-reload
-systemctl enable wechsler.service
+# Wechselskript in den Autostart einbinden
+sed -i "/^exit 0/i sudo bash $verzeichnis/wechsler.sh $verzeichnis/ssid_list.txt &" /etc/rc.local
 
 # Hostapd und Dnsmasq starten
 systemctl unmask hostapd
