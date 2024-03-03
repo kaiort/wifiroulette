@@ -29,7 +29,7 @@ EOF
         # Hostapd-Dienst neu starten
         sudo systemctl restart hostapd
 
-        # Warte 60 Sekunden
+        # Warte 10 Sekunden
         sleep 10
     done < "$ssid_file"
 done
