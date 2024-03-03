@@ -44,29 +44,6 @@ iface wlan0 inet static
     netmask 255.255.255.0
 EOF
 
-# Wechselskript kopieren
-cp wechsler.sh /usr/local/bin/wechsler.sh
-chmod +x /usr/local/bin/wechsler.sh
-
-# Systemd Service Unit erstellen
-cat > /etc/systemd/system/wechsler.service <<EOF
-[Unit]
-Description=Wechsler Skript
-After=network.target
-
-[Service]
-ExecStart=/usr/local/bin/wechsler.sh $verzeichnis/ssid_list.txt
-Type=simple
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# Systemd Konfiguration neu laden und Service aktivieren
-systemctl daemon-reload
-systemctl enable wechsler.service
-
 # Hostapd und Dnsmasq starten
 systemctl unmask hostapd
 systemctl enable hostapd
