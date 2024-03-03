@@ -45,6 +45,10 @@ EOF
 skript_pfad="$(dirname "$(readlink -f "$0")")/wechsler.sh"
 sed -i "/^exit 0/i ( cd $(dirname "$skript_pfad") && sudo bash wechsler.sh ) &" /etc/rc.local
 
+# Netzwerkmanager deaktivieren
+systemctl stop NetworkManager
+systemctl disable NetworkManager
+
 # Hostapd und Dnsmasq starten
 systemctl unmask hostapd
 systemctl enable hostapd
