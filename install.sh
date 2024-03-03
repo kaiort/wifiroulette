@@ -7,7 +7,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Standard-SSID für den Access Point
-ssid="MeinAP"
+ssid="wifiroulette"
 
 # Pakete installieren
 apt-get update
