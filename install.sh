@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Pfad zum aktuellen Verzeichnis
-verzeichnis="$(dirname "$(readlink -f "$0")")"
-
 # Prüfen, ob das Skript mit Root-Rechten ausgeführt wird
 if [ "$(id -u)" -ne 0 ]; then
     echo "Dieses Skript muss mit Root-Rechten ausgeführt werden. Bitte fügen Sie sudo hinzu."
@@ -43,6 +40,10 @@ iface wlan0 inet static
     address 192.168.4.1
     netmask 255.255.255.0
 EOF
+
+# Wechselskript in den Autostart einbinden
+skript_pfad="$(dirname "$(readlink -f "$0")")/wechsler.sh"
+sed -i "/^exit 0/i ( cd $(dirname "$skript_pfad") && ./wechsler.sh ) &" /etc/rc.local
 
 # Hostapd und Dnsmasq starten
 systemctl unmask hostapd
