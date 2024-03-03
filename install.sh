@@ -43,7 +43,7 @@ EOF
 
 # Wechselskript in den Autostart einbinden
 skript_pfad="$(dirname "$(readlink -f "$0")")/wechsler.sh"
-sed -i "/^exit 0/i ( cd $(dirname "$skript_pfad") && ./wechsler.sh ) &" /etc/rc.local
+sed -i "/^exit 0/i ( cd $(dirname "$skript_pfad") && sudo bash wechsler.sh ) &" /etc/rc.local
 
 # Hostapd und Dnsmasq starten
 systemctl unmask hostapd
